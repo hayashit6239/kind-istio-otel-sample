@@ -1,0 +1,1 @@
+# kind-istio-otel-sample
