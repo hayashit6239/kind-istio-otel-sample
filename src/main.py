@@ -7,4 +7,4 @@ from .instrumentation import instrument
 app = FastAPI()
 app.include_router(router)
 
-instrument(app)
+# instrument(app)
