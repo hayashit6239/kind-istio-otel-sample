@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-sample
+  template:
+    metadata:
+      labels:
+        app: fastapi-sample
+    spec:
+      containers:
+      - name: fastapi-sample
+        image: fastapi-sample
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - mountPath: /app
+          name: test-volume
+      volumes:
+      - name: test-volume
+        hostPath:
+          path: /mnt
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-sample-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+    protpcol: TCP
+    targetPort: 8000
+    nodePort: 30000
+  selector:
+    app: fastapi-sample
