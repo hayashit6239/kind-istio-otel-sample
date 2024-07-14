@@ -23,7 +23,7 @@ spec:
       volumes:
       - name: src-volume
         hostPath:
-          path: /mnt/service-backend-a
+          path: /mnt/service-backend-for-frontend
           type: Directory
 ---
 apiVersion: v1

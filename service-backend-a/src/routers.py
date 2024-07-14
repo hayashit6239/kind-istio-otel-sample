@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import functions
@@ -30,36 +30,11 @@ async def add_author(name: str, db: AsyncSession = Depends(get_db)) -> Author:
     return Author.model_validate(author)
 
 
-# @router.post("/books", tags=["/books"])
-# async def add_book(name: str, author_id: int, db: AsyncSession = Depends(get_db)) -> Book:
-#     # with trace.get_tracer_provider().get_tracer("book-service").start_as_current_span(__name__) as span:
-#     book = await functions.add_book(name, author_id, db)
-#     if book is None:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown author_id")
-#     return Book.model_validate(book)
-
-
 @router.get("/authors", tags=["/authors"])
-async def get_authors(db: AsyncSession = Depends(get_db)) -> list[Author]:
-    routers_counter.add(1, {
-        "routers.type": "GET_AUTHORS"
-    })
+async def get_authors(request: Request, db: AsyncSession = Depends(get_db)) -> list[Author]:
     with tracer.start_as_current_span(__name__) as span:
-        start_time = time.monotonic()
-
-        span.add_event(name="get_authors")
         authors = await functions.get_authors(db)
         res = list(map(Author.model_validate, authors))
-
-        end_time = time.monotonic()
-
-        duration_ms = (end_time - start_time) * 1000
-        routers_duration_histogram.record(
-            duration_ms,
-            attributes={
-                "routers.type": "GET_AUTHORS"
-            }
-        )
         return res
 
 

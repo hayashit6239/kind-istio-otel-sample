@@ -100,22 +100,22 @@ async def delete_book(book_id: int, db: AsyncSession) -> bool:
     return True
 
 async def test_micro():
-    with tracer.start_as_current_span(__name__) as span:
-        trace_id = span.get_span_context().trace_id
-        span_id = span.get_span_context().span_id
-        span.add_event(
-            name="first service",
-            timestamp=int(time.time()),
-            attributes={
-                "point": "first",
-                # "info": info
-            }
-        )
-        url = f"http://service-backend-b.default.svc.cluster.local:8082/micro/b"
-        headers = {}
-        inject(headers)
-        response = requests.post(
-            url,
-            headers=headers
-        )
-        return True
+    # with tracer.start_as_current_span(__name__) as span:
+        # trace_id = span.get_span_context().trace_id
+        # span_id = span.get_span_context().span_id
+        # span.add_event(
+        #     name="first service",
+        #     timestamp=int(time.time()),
+        #     attributes={
+        #         "point": "first",
+        #         # "info": info
+        #     }
+        # )
+    url = f"http://service-backend-b.default.svc.cluster.local:8082/micro/b"
+    headers = {}
+    inject(headers)
+    response = requests.post(
+        url,
+        headers=headers
+    )
+    return True

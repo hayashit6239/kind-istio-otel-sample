@@ -11,9 +11,14 @@ build:
     context: .
     docker:
       dockerfile: containers/service-backend-b/Dockerfile
+  - image: backend-for-frontend
+    context: .
+    docker:
+      dockerfile: containers/service-backend-for-frontend/Dockerfile
 
 deploy:
   kubectl:
     manifests:
+    - manifest/service-backend-for-frontend.yaml
     - manifest/service-backend-a.yaml
     - manifest/service-backend-b.yaml

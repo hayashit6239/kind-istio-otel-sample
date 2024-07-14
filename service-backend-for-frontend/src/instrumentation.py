@@ -31,8 +31,8 @@ from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExp
 def instrument(app):
     # Semantic Convestions を指定
     resource = Resource.create({
-        ResourceAttributes.SERVICE_NAME: "book-service-a",
-        ResourceAttributes.SERVICE_INSTANCE_ID: f"book-service-a",
+        ResourceAttributes.SERVICE_NAME: "service-backend-for-frontend",
+        ResourceAttributes.SERVICE_INSTANCE_ID: f"service-backend-for-frontend",
     })
 
     # トレース関連の設定
@@ -66,38 +66,37 @@ def instrument(app):
     # FastAPI の計装
     FastAPIInstrumentor.instrument_app(app)
     # SQLAlchemy の計装
-    SQLAlchemyInstrumentor().instrument(enable_commenter=True, commenter_options={})
 
 
-async def trace_function(func):
+# async def trace_function(func):
+#     """
+#     関数をトレースするデコレータ
+#     """
+#     async def wrapper(*args, **kwargs):
+#         tracer = trace.get_tracer_provider().get_tracer("service-backend-for-frontend")
+#         print(func.__name__)
+#         with tracer.start_as_current_span(func.__name__) as span:
+#             # スパンに属性を追加する
+#             span.set_attribute("function.name", func.__name__)
+#             span.set_attribute("function.args", args)
+#             span.set_attribute("function.kwargs", str(kwargs))
+#             # 関数を呼び出す
+#             result = await func(*args, **kwargs)
+#             return result
+#     return await wrapper
+
+def add_trace(func):
     """
     関数をトレースするデコレータ
     """
-    tracer = trace.get_tracer_provider().get_tracer("service-backend-for-frontend")
-    async def wrapper(*args, **kwargs):
+    tracer = trace.get_tracer_provider().get_tracer("default")
+    def wrapper(*args, **kwargs):
         with tracer.start_as_current_span(func.__name__) as span:
             # スパンに属性を追加する
             span.set_attribute("function.name", func.__name__)
             span.set_attribute("function.args", args)
             span.set_attribute("function.kwargs", str(kwargs))
             # 関数を呼び出す
-            result = await func(*args, **kwargs)
-            return result
-    return wrapper
-
-async def parse_trace(func):
-    """
-    関数をトレースするデコレータ
-    """
-    tracer = trace.get_tracer_provider().get_tracer("service-backend-for-frontend")
-    async def wrapper(*args, **kwargs):
-        print(kwargs)
-        with tracer.start_as_current_span(func.__name__) as span:
-            # スパンに属性を追加する
-            span.set_attribute("function.name", func.__name__)
-            span.set_attribute("function.args", args)
-            span.set_attribute("function.kwargs", str(kwargs))
-            # 関数を呼び出す
-            result = await func(*args, **kwargs)
+            result = func(*args, **kwargs)
             return result
     return wrapper

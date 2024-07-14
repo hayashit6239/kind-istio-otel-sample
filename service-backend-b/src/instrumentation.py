@@ -67,3 +67,20 @@ def instrument(app):
     FastAPIInstrumentor.instrument_app(app)
     # SQLAlchemy の計装
     SQLAlchemyInstrumentor().instrument(enable_commenter=True, commenter_options={})
+
+async def parse_trace(func):
+    """
+    関数をトレースするデコレータ
+    """
+    tracer = trace.get_tracer_provider().get_tracer("service-backend-for-frontend")
+    async def wrapper(*args, **kwargs):
+        print(kwargs)
+        with tracer.start_as_current_span(func.__name__) as span:
+            # スパンに属性を追加する
+            span.set_attribute("function.name", func.__name__)
+            span.set_attribute("function.args", args)
+            span.set_attribute("function.kwargs", str(kwargs))
+            # 関数を呼び出す
+            result = await func(*args, **kwargs)
+            return result
+    return wrapper
