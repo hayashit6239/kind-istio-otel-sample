@@ -1,4 +1,5 @@
 import logging
+import os
 
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
@@ -31,8 +32,8 @@ from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExp
 def instrument(app):
     # Semantic Convestions を指定
     resource = Resource.create({
-        ResourceAttributes.SERVICE_NAME: "book-service-a",
-        ResourceAttributes.SERVICE_INSTANCE_ID: f"book-service-a",
+        ResourceAttributes.SERVICE_NAME: "service-backend-a",
+        ResourceAttributes.SERVICE_INSTANCE_ID: "service-backend-a",
     })
 
     # トレース関連の設定
@@ -40,9 +41,11 @@ def instrument(app):
         TracerProvider(resource=resource)
     )
     trace.get_tracer_provider().add_span_processor(
-        # SimpleSpanProcessor(OTLPSpanExporter())
+        SimpleSpanProcessor(OTLPSpanExporter(
+            endpoint=os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+        ))
         # SimpleSpanProcessor(ConsoleSpanExporter())
-        SimpleSpanProcessor(CloudTraceSpanExporter())
+        # SimpleSpanProcessor(CloudTraceSpanExporter())
     )
 
     # # ログ関連の設定

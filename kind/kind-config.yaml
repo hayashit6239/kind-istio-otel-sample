@@ -9,6 +9,8 @@ nodes:
     hostPort: 8081
   - containerPort: 30002
     hostPort: 8082
+  - containerPort: 30003
+    hostPort: 4317
 - role: worker
   extraMounts:
   - containerPath: /mnt

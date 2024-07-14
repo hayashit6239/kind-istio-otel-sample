@@ -1,14 +1,18 @@
 import requests, json
+import logging
 from typing import Callable
+
 from opentelemetry.propagate import inject
 from opentelemetry import trace
+
 from .schemas import Book
-# from .instrumentation import add_trace
 
 tracer = trace.get_tracer_provider().get_tracer("default")
+logger = logging.getLogger()
 
 
 async def get_authors_service_backend_a():
+    logger.info("REQUEST TO SERVICE BACKEND A")
     func_name = f"{__name__}.get_authors_service_backend_a"
     with tracer.start_as_current_span(func_name) as span:
         # スパンに属性を追加する
@@ -24,6 +28,7 @@ async def get_authors_service_backend_a():
         return response.json()
 
 async def get_books_service_backend_b():
+    logger.info("REQUEST TO SERVICE BACKEND B")
     func_name = f"{__name__}.books_service_backend_b"
     with tracer.start_as_current_span(func_name) as span:
         # スパンに属性を追加する

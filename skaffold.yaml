@@ -15,6 +15,10 @@ build:
     context: .
     docker:
       dockerfile: containers/service-backend-for-frontend/Dockerfile
+  - image: otel-collector
+    context: .
+    docker:
+      dockerfile: containers/opentelemetry-collector/Dockerfile
 
 deploy:
   kubectl:
@@ -22,3 +26,4 @@ deploy:
     - manifest/service-backend-for-frontend.yaml
     - manifest/service-backend-a.yaml
     - manifest/service-backend-b.yaml
+    - manifest/opentelemetry-collector.yaml

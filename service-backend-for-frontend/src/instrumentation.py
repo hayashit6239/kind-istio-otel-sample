@@ -1,4 +1,5 @@
 import logging
+import os
 
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
@@ -40,32 +41,33 @@ def instrument(app):
         TracerProvider(resource=resource)
     )
     trace.get_tracer_provider().add_span_processor(
-        # SimpleSpanProcessor(OTLPSpanExporter())
+        SimpleSpanProcessor(OTLPSpanExporter(
+            endpoint=os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+        ))
         # SimpleSpanProcessor(ConsoleSpanExporter())
-        SimpleSpanProcessor(CloudTraceSpanExporter())
+        # SimpleSpanProcessor(CloudTraceSpanExporter())
     )
 
-    # # ログ関連の設定
-    # logger_provider = LoggerProvider(resource=resource)
-    # _logs.set_logger_provider(
-    #     logger_provider.add_log_record_processor(
-    #         SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
-    #     )
-    # ))
+    # ログ関連の設定
+    logger_provider = LoggerProvider(resource=resource)
+    _logs.set_logger_provider(
+        logger_provider.add_log_record_processor(
+            SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
+        )
+    ))
 
-    # handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
-    # logging.getLogger().addHandler(handler)
-    # logging.getLogger().setLevel("INFO")
+    handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel("INFO")
     
-    # # メトリクス関連の設定
-    # metric_reader = PeriodicExportingMetricReader(OTLPMetricExporter())
-    # metrics.set_meter_provider(
-    #     MeterProvider(resource=resource, metric_readers=[metric_reader])
-    # )
+    # メトリクス関連の設定
+    metric_reader = PeriodicExportingMetricReader(OTLPMetricExporter())
+    metrics.set_meter_provider(
+        MeterProvider(resource=resource, metric_readers=[metric_reader])
+    )
 
     # FastAPI の計装
     FastAPIInstrumentor.instrument_app(app)
-    # SQLAlchemy の計装
 
 
 # async def trace_function(func):

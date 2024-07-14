@@ -15,6 +15,9 @@ spec:
       containers:
       - name: backend-b
         image: backend-b
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://service-otel-collector.default.svc.cluster.local:4317"
         ports:
         - containerPort: 8082
         volumeMounts:
