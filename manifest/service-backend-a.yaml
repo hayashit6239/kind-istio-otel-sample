@@ -1,39 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastapi-sample
+  name: backend-a
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fastapi-sample
+      app: backend-a
   template:
     metadata:
       labels:
-        app: fastapi-sample
+        app: backend-a
     spec:
       containers:
-      - name: fastapi-sample
-        image: fastapi-sample
+      - name: backend-a
+        image: backend-a
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         volumeMounts:
         - mountPath: /app
-          name: test-volume
+          name: src-volume
       volumes:
-      - name: test-volume
+      - name: src-volume
         hostPath:
-          path: /mnt
+          path: /mnt/service-backend-a
           type: Directory
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-sample-service
+  name: service-backend-a
 spec:
   type: NodePort
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 8081
+    targetPort: 8081
+    nodePort: 30001
   selector:
-    app: fastapi-sample
+    app: backend-a
+

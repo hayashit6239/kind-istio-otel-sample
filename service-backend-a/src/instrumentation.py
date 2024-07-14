@@ -9,7 +9,8 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import (
     BatchSpanProcessor,
-    SimpleSpanProcessor
+    SimpleSpanProcessor,
+    ConsoleSpanExporter
 )
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
@@ -30,8 +31,8 @@ from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExp
 def instrument(app):
     # Semantic Convestions を指定
     resource = Resource.create({
-        ResourceAttributes.SERVICE_NAME: "book-service",
-        ResourceAttributes.SERVICE_INSTANCE_ID: f"book-service",
+        ResourceAttributes.SERVICE_NAME: "book-service-a",
+        ResourceAttributes.SERVICE_INSTANCE_ID: f"book-service-a",
     })
 
     # トレース関連の設定
@@ -39,26 +40,28 @@ def instrument(app):
         TracerProvider(resource=resource)
     )
     trace.get_tracer_provider().add_span_processor(
-        SimpleSpanProcessor(OTLPSpanExporter())
+        # SimpleSpanProcessor(OTLPSpanExporter())
+        # SimpleSpanProcessor(ConsoleSpanExporter())
+        SimpleSpanProcessor(CloudTraceSpanExporter())
     )
 
-    # ログ関連の設定
-    logger_provider = LoggerProvider(resource=resource)
-    _logs.set_logger_provider(
-        logger_provider.add_log_record_processor(
-            SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
-        )
-    ))
+    # # ログ関連の設定
+    # logger_provider = LoggerProvider(resource=resource)
+    # _logs.set_logger_provider(
+    #     logger_provider.add_log_record_processor(
+    #         SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
+    #     )
+    # ))
 
-    handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
-    logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel("INFO")
+    # handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
+    # logging.getLogger().addHandler(handler)
+    # logging.getLogger().setLevel("INFO")
     
-    # メトリクス関連の設定
-    metric_reader = PeriodicExportingMetricReader(OTLPMetricExporter())
-    metrics.set_meter_provider(
-        MeterProvider(resource=resource, metric_readers=[metric_reader])
-    )
+    # # メトリクス関連の設定
+    # metric_reader = PeriodicExportingMetricReader(OTLPMetricExporter())
+    # metrics.set_meter_provider(
+    #     MeterProvider(resource=resource, metric_readers=[metric_reader])
+    # )
 
     # FastAPI の計装
     FastAPIInstrumentor.instrument_app(app)

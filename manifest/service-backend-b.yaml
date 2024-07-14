@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-b
+  template:
+    metadata:
+      labels:
+        app: backend-b
+    spec:
+      containers:
+      - name: backend-b
+        image: backend-b
+        ports:
+        - containerPort: 8082
+        volumeMounts:
+        - mountPath: /app
+          name: src-volume
+      volumes:
+      - name: src-volume
+        hostPath:
+          path: /mnt/service-backend-b
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-backend-b
+spec:
+  type: NodePort
+  ports:
+  - port: 8082
+    targetPort: 8082
+    nodePort: 30002
+  selector:
+    app: backend-b

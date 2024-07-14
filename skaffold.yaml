@@ -3,12 +3,17 @@ kind: Config
 
 build:
   artifacts:
-  - image: fastapi-sample
+  - image: backend-a
     context: .
     docker:
-      dockerfile: containers/fastapi/Dockerfile
+      dockerfile: containers/service-backend-a/Dockerfile
+  - image: backend-b
+    context: .
+    docker:
+      dockerfile: containers/service-backend-b/Dockerfile
 
 deploy:
   kubectl:
     manifests:
-    - manifest/deployment.yaml
+    - manifest/service-backend-a.yaml
+    - manifest/service-backend-b.yaml

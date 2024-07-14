@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-for-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-for-frontend
+  template:
+    metadata:
+      labels:
+        app: backend-for-frontend
+    spec:
+      containers:
+      - name: backend-for-frontend
+        image: backend-for-frontend
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /app
+          name: src-volume
+      volumes:
+      - name: src-volume
+        hostPath:
+          path: /mnt/service-backend-a
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-backend-for-frontend
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30000
+  selector:
+    app: backend-for-frontend
