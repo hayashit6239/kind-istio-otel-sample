@@ -15,6 +15,12 @@ async def test_micro():
     result = await gateways.get_books_service_backend_b()
     return True
 
+@router.get("/micro/a/b", tags=["/micro/a/b"])
+async def test_micro_to_b():
+    logger.info("START GET MICRO SERVICE")
+    result = await gateways.get_service_backend_a_to_b()
+    return True
+
 
 @router.get("/micro/authors", tags=["/micro/authors"])
 async def get_authors() -> list[Author]:

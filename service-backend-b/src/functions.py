@@ -11,6 +11,7 @@ import time
 import requests, json
 
 tracer = trace.get_tracer_provider().get_tracer("book-service-b")
+logger = logging.getLogger()
 
 async def add_author(name: str, db: AsyncSession) -> Author:
     author = Author(id=None, name=name, books=[])  # type: ignore
@@ -100,6 +101,7 @@ async def delete_book(book_id: int, db: AsyncSession) -> bool:
 
 async def test_micro():
     with tracer.start_as_current_span(__name__) as span:
+        logger.info("REGIST SERVIRCE BACKEND B")
         span.add_event(
             name="first service",
             timestamp=int(time.time()),
@@ -107,5 +109,4 @@ async def test_micro():
                 "point": "first"
             }
         )
-        url = f"h"
         return await db.scalars(select(Book))

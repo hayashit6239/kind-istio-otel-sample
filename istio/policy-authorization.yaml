@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-bff-to-backend-b
+spec:
+ selector:
+   matchLabels:
+     app: backend-b
+ action: ALLOW
+ rules:
+ - from:
+   - source:
+      principals:
+      - cluster.local/ns/default/sa/bff-serviceaccouunt

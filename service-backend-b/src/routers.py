@@ -57,14 +57,6 @@ async def book_details(book_id: int, db: AsyncSession = Depends(get_db)) -> Book
     return BookDetails.model_validate(book)
 
 
-# @router.put("/authors", tags=["/authors"])
-# async def update_author(author_id: int, name: str, db: AsyncSession = Depends(get_db)) -> Author:
-#     author = await functions.update_author(author_id, name, db)
-#     if author is None:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown author_id")
-#     return Author.model_validate(author)
-
-
 @router.put("/books", tags=["/books"])
 async def update_book(book_id: int, name: str, db: AsyncSession = Depends(get_db)) -> Book:
     book = await functions.update_book(book_id, name, db)
@@ -73,24 +65,18 @@ async def update_book(book_id: int, name: str, db: AsyncSession = Depends(get_db
     return Book.model_validate(book)
 
 
-# @router.delete("/authors", tags=["/authors"])
-# async def delete_author(author_id: int, db: AsyncSession = Depends(get_db)):
-#     ok = await functions.delete_author(author_id, db)
-#     if not ok:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown author_id")
-
 @router.delete("/books", tags=["/books"])
 async def delete_book(book_id: int, db: AsyncSession = Depends(get_db)):
     ok = await functions.delete_book(book_id, db)
     if not ok:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown book_id")
 
-@router.post("/micro/b", tags=["/micro"])
+
+@router.post("/micro/b", tags=["/micro/b"])
 async def test_micro(request: Request, db: AsyncSession = Depends(get_db)):
-    logger.info(request)
-    context = extract(request.headers)
-    with tracer.start_as_current_span(__name__, context=context) as span:
-        book = await functions.add_book("micro連携2", 1, db)
+    with tracer.start_as_current_span(__name__) as span:
+        logger.info("START SERVIRCE BACKEND B")
+        book = await functions.add_book("micro連携3", 1, db)
         if book is None:
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown author_id")
         return Book.model_validate(book)

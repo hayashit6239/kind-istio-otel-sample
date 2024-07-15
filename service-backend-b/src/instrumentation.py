@@ -48,17 +48,17 @@ def instrument(app):
         # SimpleSpanProcessor(CloudTraceSpanExporter())
     )
 
-    # # ログ関連の設定
-    # logger_provider = LoggerProvider(resource=resource)
-    # _logs.set_logger_provider(
-    #     logger_provider.add_log_record_processor(
-    #         SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
-    #     )
-    # ))
+    # ログ関連の設定
+    logger_provider = LoggerProvider(resource=resource)
+    _logs.set_logger_provider(
+        logger_provider.add_log_record_processor(
+            SimpleLogRecordProcessor(OTLPLogExporter(insecure=True)
+        )
+    ))
 
-    # handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
-    # logging.getLogger().addHandler(handler)
-    # logging.getLogger().setLevel("INFO")
+    handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel("INFO")
     
     # # メトリクス関連の設定
     # metric_reader = PeriodicExportingMetricReader(OTLPMetricExporter())

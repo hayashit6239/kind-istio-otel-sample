@@ -12,6 +12,7 @@ import requests, json
 from opentelemetry.propagate import extract, inject
 
 tracer = trace.get_tracer_provider().get_tracer("book-service-a")
+logger = logging.getLogger()
 
 async def add_author(name: str, db: AsyncSession) -> Author:
     author = Author(id=None, name=name, books=[])  # type: ignore
@@ -100,22 +101,16 @@ async def delete_book(book_id: int, db: AsyncSession) -> bool:
     return True
 
 async def test_micro():
-    # with tracer.start_as_current_span(__name__) as span:
-        # trace_id = span.get_span_context().trace_id
-        # span_id = span.get_span_context().span_id
-        # span.add_event(
-        #     name="first service",
-        #     timestamp=int(time.time()),
-        #     attributes={
-        #         "point": "first",
-        #         # "info": info
-        #     }
-        # )
-    url = f"http://service-backend-b.default.svc.cluster.local:8082/micro/b"
-    headers = {}
-    inject(headers)
-    response = requests.post(
-        url,
-        headers=headers
-    )
-    return True
+    logger.info("REQUEST TO SERVICE BACKEND B")
+    func_name = f"{__name__}.get_service_backend_b"
+    with tracer.start_as_current_span(__name__) as span:
+        span.set_attribute("function.name", func_name)
+
+        url = "http://service-backend-b.default.svc.cluster.local:8082/micro/b"
+        headers = {}
+        inject(headers)
+        response = requests.post(
+            url,
+            headers=headers
+        )
+        return response.json()

@@ -11,6 +11,22 @@ tracer = trace.get_tracer_provider().get_tracer("default")
 logger = logging.getLogger()
 
 
+async def get_service_backend_a_to_b():
+    logger.info("REQUEST TO SERVICE BACKEND A TO SERVICE BACKEND B")
+    func_name = f"{__name__}.get_service_backend_a_to_b"
+    with tracer.start_as_current_span(func_name) as span:
+        span.set_attribute("function.name", func_name)
+
+        headers = {}
+        inject(headers)
+        url = "http://service-backend-a.default.svc.cluster.local:8081/micro/a"
+        response = requests.get(
+            url,
+            headers=headers
+        )
+        return response.json()
+
+
 async def get_authors_service_backend_a():
     logger.info("REQUEST TO SERVICE BACKEND A")
     func_name = f"{__name__}.get_authors_service_backend_a"
