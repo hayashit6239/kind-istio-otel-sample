@@ -16,14 +16,14 @@ exporters:
   googlecloud:
     log:
       default_log_name: opentelemetry.io/collector-exported-log
-    project: nodeai
+    project: [project_id]
 
 service:
   pipelines:
-    metrics:
-      receivers: [otlp]
-      processors: [batch, resourcedetection]
-      exporters: [googlecloud]
+    # metrics:
+    #   receivers: [otlp]
+    #   processors: [batch, resourcedetection]
+    #   exporters: [googlecloud]
     logs:
       receivers: [otlp]
       processors: [batch, resourcedetection]
@@ -31,4 +31,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch, resourcedetection]
-      exporters: [googlecloud]
+      exporters: [debug, googlecloud]

@@ -33,3 +33,10 @@ async def get_books() -> list[Book]:
     logger.info("START GET_BOOKS")
     result = await gateways.get_books_service_backend_b()
     return result
+
+
+@router.get("/micro/test", tags=["/micro/test"])
+async def test():
+    logger.info("START GET_BOOKS")
+    # result = await gateways.get_books_service_backend_b()
+    return "OK"
