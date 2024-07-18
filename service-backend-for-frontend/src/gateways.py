@@ -5,8 +5,6 @@ from typing import Callable
 from opentelemetry.propagate import inject
 from opentelemetry import trace
 
-from .schemas import Book
-
 tracer = trace.get_tracer_provider().get_tracer("default")
 logger = logging.getLogger()
 
@@ -45,7 +43,7 @@ async def get_authors_service_backend_a():
 
 async def get_books_service_backend_b():
     logger.info("REQUEST TO SERVICE BACKEND B")
-    func_name = f"{__name__}.books_service_backend_b"
+    func_name = f"{__name__}.get_books_service_backend_b"
     with tracer.start_as_current_span(func_name) as span:
         # スパンに属性を追加する
         span.set_attribute("function.name", func_name)

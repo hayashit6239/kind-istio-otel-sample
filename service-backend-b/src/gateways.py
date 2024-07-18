@@ -13,13 +13,6 @@ import requests, json
 tracer = trace.get_tracer_provider().get_tracer("book-service-b")
 logger = logging.getLogger()
 
-async def add_author(name: str, db: AsyncSession) -> Author:
-    author = Author(id=None, name=name, books=[])  # type: ignore
-    db.add(author)
-    await db.commit()
-    await db.refresh(author)
-    return author
-
 
 async def add_book(name: str, author_id: int, db: AsyncSession) -> Book | None:
     author = await get_author(author_id, db)
@@ -30,12 +23,6 @@ async def add_book(name: str, author_id: int, db: AsyncSession) -> Book | None:
     await db.commit()
     await db.refresh(book)
     return book
-
-
-async def get_authors(db: AsyncSession):
-    with tracer.start_as_current_span(__name__) as span:
-        span.add_event(name="get_authors")
-        return await db.scalars(select(Author))
 
 
 async def get_books(db: AsyncSession):
@@ -50,10 +37,6 @@ async def get_books(db: AsyncSession):
         return await db.scalars(select(Book))
 
 
-async def get_author(author_id: int, db: AsyncSession) -> Author | None:
-    return await db.get(Author, author_id)
-
-
 async def get_book(book_id: int, db: AsyncSession) -> Book | None:
     return await db.get(Book, book_id)
 
@@ -64,15 +47,6 @@ async def book_details(book_id: int, db: AsyncSession) -> Book | None:
     )
 
 
-async def update_author(author_id: int, name: str, db: AsyncSession) -> Author | None:
-    author = await db.get(Author, author_id)
-    if author:
-        author.name = name
-        await db.commit()
-        await db.refresh(author)
-    return author
-
-
 async def update_book(book_id: int, name: str, db: AsyncSession) -> Book | None:
     book = await db.get(Book, book_id)
     if book:
@@ -80,15 +54,6 @@ async def update_book(book_id: int, name: str, db: AsyncSession) -> Book | None:
         await db.commit()
         await db.refresh(book)
     return book
-
-
-async def delete_author(author_id: int, db: AsyncSession) -> bool:
-    author = await db.get(Author, author_id)
-    if author is None:
-        return False
-    await db.delete(author)
-    await db.commit()
-    return True
 
 
 async def delete_book(book_id: int, db: AsyncSession) -> bool:

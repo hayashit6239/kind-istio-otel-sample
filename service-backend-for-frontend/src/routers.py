@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 import logging
 
 from . import gateways
-from .schemas import Author, Book
+from .entities import Author, Book
 
 router = APIRouter()
 logger = logging.getLogger()
