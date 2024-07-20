@@ -1,5 +1,9 @@
 FROM fnndsc/python-poetry:latest
 
+USER root
+RUN apt-get update
+RUN apt-get install -y curl
+
 ENTRYPOINT cd /app && \
            poetry install && \
            poetry run python create_table.py && \

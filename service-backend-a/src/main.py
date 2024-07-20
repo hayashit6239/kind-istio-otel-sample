@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from .routers import router
 
@@ -20,4 +21,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-instrument(app)
+if os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT") != "":
+    instrument(app)

@@ -39,4 +39,4 @@ async def get_books() -> list[Book]:
 async def test():
     logger.info("START GET_BOOKS")
     # result = await gateways.get_books_service_backend_b()
-    return "OK"
+    return "OKKKKKKKKKKKKKKKK"

@@ -26,4 +26,4 @@ deploy:
     - manifests/service-backend-for-frontend.yaml
     - manifests/service-backend-a.yaml
     - manifests/service-backend-b.yaml
-    - manifests/service-otel-collector.yaml
+#    - manifests/service-otel-collector.yaml

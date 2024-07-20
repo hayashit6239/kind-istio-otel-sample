@@ -17,7 +17,7 @@ exporters:
   googlecloud:
     log:
       default_log_name: opentelemetry.io/collector-exported-log
-    project: ${project_id}
+    project: [project id]
 
 service:
   pipelines:
