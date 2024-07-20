@@ -11,13 +11,17 @@ processors:
     override: false
 
 exporters:
-  logging:
   debug:
     verbosity: detailed
   googlecloud:
     log:
       default_log_name: opentelemetry.io/collector-exported-log
-    project: [project id]
+    project: ${project_id}
+  otlphttp:
+    endpoint: "http://service-openobserve.default.svc.cluster.local:5080/api/default"
+    # Basic 認証用の情報: https://openobserve.ai/docs/ingestion/traces/
+    headers:
+      Authorization: Basic cm9vdEBleGFtcGxlLmNvbTpDb21wbGV4cGFzcyMxMjMK
 
 service:
   pipelines:
@@ -29,7 +33,9 @@ service:
       receivers: [otlp]
       processors: [batch, resourcedetection]
       exporters: [googlecloud]
+      # exporters: [otlphttp]
     traces:
       receivers: [otlp]
       processors: [batch, resourcedetection]
-      exporters: [googlecloud]
+      exporters: [googlecloud, otlphttp]
+      # exporters: [otlphttp]

@@ -24,7 +24,6 @@ async def get_service_backend_a_to_b():
         )
         return response.json()
 
-
 async def get_authors_service_backend_a():
     logger.info("REQUEST TO SERVICE BACKEND A")
     func_name = f"{__name__}.get_authors_service_backend_a"

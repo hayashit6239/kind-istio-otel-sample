@@ -15,10 +15,15 @@ build:
     context: .
     docker:
       dockerfile: containers/service-backend-for-frontend/Dockerfile
-  - image: otel-collector
-    context: .
-    docker:
-      dockerfile: containers/service-otel-collector/Dockerfile
+  # - image: otel-collector
+  #   context: .
+  #   docker:
+  #     dockerfile: containers/service-otel-collector/Dockerfile
+  # - image: openobserve
+  #   context: .
+  #   docker:
+  #     dockerfile: containers/service-openobserve/Dockerfile
+
 
 deploy:
   kubectl:
@@ -26,4 +31,5 @@ deploy:
     - manifests/service-backend-for-frontend.yaml
     - manifests/service-backend-a.yaml
     - manifests/service-backend-b.yaml
-#    - manifests/service-otel-collector.yaml
+    # - manifests/service-otel-collector.yaml
+    # - manifests/service-openobserve.yaml

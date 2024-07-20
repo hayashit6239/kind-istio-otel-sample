@@ -24,7 +24,7 @@ spec:
         env:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
         # OpenTelemetry を検証する際に value に値を入れる
-        #  value: "http://service-otel-collector.default.svc.cluster.local:4317"
+          # value: "http://service-otel-collector.default.svc.cluster.local:4317"
           value: ""
         ports:
         - containerPort: 8080

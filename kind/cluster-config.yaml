@@ -11,6 +11,8 @@ nodes:
     hostPort: 8082
   - containerPort: 30003
     hostPort: 4317
+  - containerPort: 30004
+    hostPort: 5080
 - role: worker
   extraMounts:
   - containerPath: /mnt
