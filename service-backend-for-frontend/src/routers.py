@@ -9,14 +9,14 @@ logger = logging.getLogger()
 
 
 @router.get("/micro", tags=["/micro"])
-async def test_micro():
+async def test_micro_service():
     logger.info("START GET MICRO SERVICE")
     result = await gateways.get_authors_service_backend_a()
     result = await gateways.get_books_service_backend_b()
     return True
 
 @router.get("/micro/a/b", tags=["/micro/a/b"])
-async def test_micro_to_b():
+async def test_micro_service_to_ato_b():
     logger.info("START GET MICRO SERVICE")
     result = await gateways.get_service_backend_a_to_b()
     return result
@@ -35,7 +35,7 @@ async def get_books() -> list[Book]:
     return result
 
 
-@router.get("/health", tags=["/micro/test"])
-async def health():
+@router.get("/health", tags=["/health"])
+async def health_check():
     logger.info("HEALTH CHECK")
     return True
