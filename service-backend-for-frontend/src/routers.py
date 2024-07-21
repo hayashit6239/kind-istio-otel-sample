@@ -16,7 +16,7 @@ async def test_micro_service():
     return True
 
 @router.get("/micro/a/b", tags=["/micro/a/b"])
-async def test_micro_service_to_ato_b():
+async def test_micro_service_to_a_to_b():
     logger.info("START GET MICRO SERVICE")
     result = await gateways.get_service_backend_a_to_b()
     return result
