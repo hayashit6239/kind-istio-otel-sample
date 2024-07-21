@@ -14,6 +14,10 @@ tracer = trace.get_tracer_provider().get_tracer("book-service-b")
 logger = logging.getLogger()
 
 
+async def get_author(author_id: int, db: AsyncSession) -> Author | None:
+    return await db.get(Author, author_id)
+
+
 async def add_book(name: str, author_id: int, db: AsyncSession) -> Book | None:
     author = await get_author(author_id, db)
     if not author:

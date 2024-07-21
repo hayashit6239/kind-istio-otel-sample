@@ -29,7 +29,6 @@ routers_duration_histogram = meter.create_histogram(
 
 @router.post("/books", tags=["/books"])
 async def add_book(name: str, author_id: int, db: AsyncSession = Depends(get_db)) -> Book:
-    # with trace.get_tracer_provider().get_tracer("book-service").start_as_current_span(__name__) as span:
     book = await gateways.add_book(name, author_id, db)
     if book is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Unknown author_id")
