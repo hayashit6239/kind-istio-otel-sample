@@ -25,8 +25,8 @@ OpenObserve での可視化結果はこちらです。
 
 ![ad584a315b6b-20240721](https://github.com/user-attachments/assets/08cae378-9b53-4c96-a432-c2d913af35a0)
 
-## Istio & Kialia でのサービスメッシュ検証
-Istio と Prometheus と Kialia をデプロイしてトラフィックを可視化できます。
+## Istio & Kiali でのサービスメッシュ検証
+Istio と Prometheus と Kiali をデプロイしてトラフィックを可視化できます。
 
 ![3516d13e6dd1-20240717](https://github.com/user-attachments/assets/e97497b3-6845-4845-a357-1e4e28915664)
 
