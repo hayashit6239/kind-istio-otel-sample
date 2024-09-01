@@ -1,1 +1,0 @@
-FROM public.ecr.aws/zinclabs/openobserve:latest
